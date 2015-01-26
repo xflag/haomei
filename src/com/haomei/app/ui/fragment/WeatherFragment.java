@@ -1,21 +1,19 @@
-package com.haomei.app.ui;
+package com.haomei.app.ui.fragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -30,11 +28,10 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.haomei.app.R;
 import com.haomei.app.adapter.ForecastGridAdapter;
-import com.haomei.app.base.BaseActivity;
 import com.haomei.app.bean.City;
 import com.haomei.app.bean.ForecastItem;
 import com.haomei.app.db.HaomeiDB;
-import com.haomei.app.util.ActivityRequestCode;
+import com.haomei.app.ui.activity.WeatherActivity;
 import com.haomei.app.util.DateUtil;
 import com.haomei.app.util.HttpCallbackListener;
 import com.haomei.app.util.HttpUtil;
@@ -44,73 +41,72 @@ import com.haomei.app.util.WeatherUtil;
 import com.haomei.app.util.WindDirection;
 import com.haomei.app.util.WindScale;
 
-public class WeatherActivity extends BaseActivity implements OnClickListener,OnItemClickListener{
-	private TextView textViewLoc,textViewToday;
+/**
+ * @author XuYongqi
+ *
+ */
+public class WeatherFragment extends Fragment implements OnItemClickListener {
+	private ImageView imgSunraise,imgSunset;
 	private TextView textViewRelease,textViewSunraise,textViewSunset,textViewPhenomenon,textViewTemperature,textViewWindDirection,textViewWindScale;
 	private GridView forecastGridView;	
-	private ImageView imgHome,imgRefresh;
 	
 	private City curCity;
 	private JSONObject jsonObject;
+	private boolean isLocate;
 	
 //	private static final String BAIDU_MAP_URL="http://api.map.baidu.com/geocoder/v2/?ak=UosvSDYpTOIaaMpDZ42G4RYW&location=%s&output=json&mcode=5F:03:11:B5:EA:1D:A4:61:30:11:FD:7C:B1:4B:DE:26:DB:B3:23:25;com.haomei.app";
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new HaomeiLocationListener();	
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_weather);	
-		this.findViews();
-		this.loadCache();		
-	}
+	public static WeatherFragment newInstance(City city) {  
+		WeatherFragment newFragment = new WeatherFragment();  
+        newFragment.curCity=city;
+        return newFragment;  
+    }  
 	
 	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub			
-		super.onDestroy();	
-		HaomeiDB.getInstance(this).close();			
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		switch (requestCode) {
-		case ActivityRequestCode.CITY_ACTIVITY:
-			if(resultCode==RESULT_OK)
-			{
-				Bundle bundle = data.getExtras(); 
-				String areaId=bundle.getString("area_id");
-				this.curCity.setAreaId(areaId);
-				if(this.curCity.getAreaId().equals("locate"))
-					this.locateBaidu();
-				else
-					this.loadWeather(areaId);
-			}
-			break;
-
-		default:
-			break;
-		}
-	}
-	
-	private void loadCache(){
-		SharedPreferences sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
-		String areaId=sharedPreferences.getString("areaId", "");
-		this.curCity=new City();
-		if(TextUtils.isEmpty(areaId)){
-//			this.curCity.setAreaId("101010100");
+		View view = inflater.inflate(R.layout.weather_fragment, container,false);
+		this.findViews(view);
+		((WeatherActivity)this.getActivity()).initData(0);
+		if(this.curCity.getAreaId().equals(HaomeiDB.LOCATE)){
+//			this.curCity.setAreaId("101010100");			
+			this.isLocate=true;
 			this.locateBaidu();
 		}			
-		else {
-			this.curCity.setAreaId(areaId);
-			this.loadWeather(this.curCity.getAreaId());			
+		else {			
+			this.loadWeather();			
+		}		
+		return view;
+	}
+	
+	private void findViews(View view){	
+		this.imgSunraise=(ImageView)view.findViewById(R.id.imageViewSunraise);
+		this.imgSunset=(ImageView)view.findViewById(R.id.imageViewSunset);
+		this.textViewRelease=(TextView)view.findViewById(R.id.textViewRelease);
+		this.textViewSunraise=(TextView)view.findViewById(R.id.textViewSunraise);
+		this.textViewSunset=(TextView)view.findViewById(R.id.textViewSunset);
+		this.textViewPhenomenon=(TextView)view.findViewById(R.id.textViewPhenomenon);
+		this.textViewTemperature=(TextView)view.findViewById(R.id.textViewTemperature);
+		this.textViewWindDirection=(TextView)view.findViewById(R.id.textViewWindDirection);
+		this.textViewWindScale=(TextView)view.findViewById(R.id.textViewWindScale);
+		this.forecastGridView=(GridView)view.findViewById(R.id.gridViewForecast);
+		this.forecastGridView.setOnItemClickListener(this);		
+	}
+	
+	public void refresh(){
+		if(this.isLocate){
+			this.locateBaidu();
 		}
-		this.initData(0);
+		else {
+			this.loadWeather();
+		}
 	}
 	
 	private void locateBaidu(){
-		this.mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+		this.mLocationClient = new LocationClient(getActivity().getApplicationContext());     //声明LocationClient类
 	    this.mLocationClient.registerLocationListener( myListener );    //注册监听函数
 		LocationClientOption option = new LocationClientOption();
 		option.setLocationMode(LocationMode.Hight_Accuracy);//设置定位模式
@@ -125,81 +121,10 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 			mLocationClient.requestLocation();
 		else 
 			LogUtil.d(WeatherActivity.class.getSimpleName(), "baiduLocClient is null or not started");
-	}	
+	}		
 	
-	
-//	private void locateWeather(){
-//		String baiduUrl=String.format(BAIDU_MAP_URL, "39.983424,116.322987");
-//		HttpUtil.executeGet(baiduUrl, new HttpCallbackListener() {
-//			
-//			@Override
-//			public void onFinish(String response) {
-//				// TODO Auto-generated method stub
-//				try {						
-//					JSONObject jsonObject=new JSONObject(response);							
-//					JSONObject addrJsonObject=jsonObject.getJSONObject("result").getJSONObject("addressComponent");						
-//					String district=addrJsonObject.getString("district");
-//					City city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(district.substring(0,district.length()-1));
-//					String areaId=city.getAreaId();
-//					if (!TextUtils.isEmpty(areaId)) {
-//						curCity.setAreaId(areaId);
-//					}
-//					else {
-//						String cityStr=addrJsonObject.getString("city");
-//						city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(cityStr.substring(0,cityStr.length()-1));
-//						areaId=city.getAreaId();
-//						if (!TextUtils.isEmpty(areaId)) {
-//							curCity.setAreaId(areaId);
-//						}
-//						else {
-//							Toast.makeText(WeatherActivity.this, "无法找到目前位置编码", Toast.LENGTH_SHORT).show();
-//						}
-//					}
-//					loadWeather(curCity.getAreaId());
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block						
-//					Toast.makeText(WeatherActivity.this, "解析位置失败", Toast.LENGTH_SHORT).show();
-//					LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
-//				}			
-//			}
-//			
-//			@Override
-//			public void onError(Exception exception) {
-//				// TODO Auto-generated method stub
-//				Toast.makeText(WeatherActivity.this, "获取位置失败", Toast.LENGTH_SHORT).show();
-//				LogUtil.e(WeatherActivity.class.getSimpleName(), exception.getMessage());
-//			}
-//		});
-//	}	
-	
-	private void findViews(){
-		this.textViewLoc=(TextView)this.findViewById(R.id.textViewLoc);
-		this.textViewToday=(TextView)this.findViewById(R.id.textViewToday);
-		this.textViewRelease=(TextView)this.findViewById(R.id.textViewRelease);
-		this.textViewSunraise=(TextView)this.findViewById(R.id.textViewSunraise);
-		this.textViewSunset=(TextView)this.findViewById(R.id.textViewSunset);
-		this.textViewPhenomenon=(TextView)this.findViewById(R.id.textViewPhenomenon);
-		this.textViewTemperature=(TextView)this.findViewById(R.id.textViewTemperature);
-		this.textViewWindDirection=(TextView)this.findViewById(R.id.textViewWindDirection);
-		this.textViewWindScale=(TextView)this.findViewById(R.id.textViewWindScale);
-		this.forecastGridView=(GridView)this.findViewById(R.id.gridViewForecast);
-		this.forecastGridView.setOnItemClickListener(this);
-		this.imgHome=(ImageView)this.findViewById(R.id.imageViewHome);
-		this.imgHome.setOnClickListener(this);
-		this.imgRefresh=(ImageView)this.findViewById(R.id.imageViewRefresh);
-		this.imgRefresh.setOnClickListener(this);
-	}
-	
-	private void initData(int diff){		
-		Date date=new Date();
-		Calendar c = Calendar.getInstance();  
-		c.add(Calendar.DATE, diff);
-		date=c.getTime();
-		this.textViewToday.setText(DateUtil.getDate(date)+" "+DateUtil.getDayOfWeek(date));
-	}	
-	
-	private void loadWeather(final String areaId){
-		runOnUiThread(new Runnable() {
+	public void loadWeather(){
+		getActivity().runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -207,24 +132,21 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 			}
 		});
 		
-		HttpUtil.executeGet(WeatherUtil.getUrl(areaId,WeatherUtil.FORECAST_V), new HttpCallbackListener() {
+		HttpUtil.executeGet(WeatherUtil.getUrl(curCity.getAreaId(),WeatherUtil.FORECAST_V), new HttpCallbackListener() {
 			
 			@Override
 			public void onFinish(final String response) {
 				// TODO Auto-generated method stub
-				runOnUiThread(new Runnable() {					
+				getActivity().runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
-//							LogUtil.i(WeatherActivity.class.getSimpleName(), response);
-							SharedPreferences sharedPreferences=PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this);
-							SharedPreferences.Editor editor=sharedPreferences.edit();
-							editor.putString("areaId", areaId);
-							editor.commit();
+//							LogUtil.i(WeatherActivity.class.getSimpleName(), response);							
+//							CacheUtil.addCache(getActivity(),curCity);
 							jsonObject=new JSONObject(response);							
-							JSONObject cJsonObject=jsonObject.getJSONObject("c");
-							textViewLoc.setText(cJsonObject.getString("c3"));		
+//							JSONObject cJsonObject=jsonObject.getJSONObject("c");
+//							curCity.setNameCn(cJsonObject.getString("c3"));
 							List<JSONObject> list=new ArrayList<JSONObject>();
 							list.add(jsonObject);							
 							JSONObject fJsonObject=jsonObject.getJSONObject("f");
@@ -245,10 +167,18 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 							String[] suns=day1.getString("fi").split("\\|");
 							textViewSunraise.setText(suns[0]+"日出");
 							textViewSunset.setText(suns[1]+"日落");
-							loadForecastGrid(f1JsonArray);							
+							if(imgSunraise.getVisibility()==View.GONE)
+								imgSunraise.setVisibility(View.VISIBLE);
+							if(imgSunset.getVisibility()==View.GONE)
+								imgSunset.setVisibility(View.VISIBLE);
+							loadForecastGrid(f1JsonArray);				
+//							if(isLocate){
+//								curCity.setAreaId(HaomeiDB.LOCATE);	
+//								((WeatherActivity)getActivity()).setLocateCity(curCity.getNameCn());
+//							}							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block							
-							Toast.makeText(WeatherActivity.this, "获取天气失败", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getActivity(), "获取天气失败", Toast.LENGTH_SHORT).show();
 							LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
 						}						
 					}
@@ -259,7 +189,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 			public void onError(Exception exception) {
 				// TODO Auto-generated method stub
 				textViewRelease.setText("获取天气失败");
-				Toast.makeText(WeatherActivity.this, "获取天气失败", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "获取天气失败", Toast.LENGTH_SHORT).show();
 				LogUtil.e(WeatherActivity.class.getSimpleName(), exception.getMessage());
 			}
 		});
@@ -307,36 +237,26 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 				item.setTemeprature(fc+"/"+fd+WeatherUtil.DEGREE);
 			list.add(item);
 		}
-		ForecastGridAdapter forecastGridAdapter=new ForecastGridAdapter(this, R.layout.forecast_item, list);
+		ForecastGridAdapter forecastGridAdapter=new ForecastGridAdapter(getActivity(), R.layout.forecast_item, list);
 		forecastGridView.setAdapter(forecastGridAdapter);
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.imageViewHome:
-			CityActivity.startActivity(this);
-			break;
-		case R.id.imageViewRefresh:
-			this.loadWeather(this.curCity.getAreaId());
-			break;
-
-		default:
-			break;
-		}
-	}
-
+	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub		
 		if(arg0.getId()==R.id.gridViewForecast)
 		{
 			try {
-				this.initData(arg2);
+				((WeatherActivity)this.getActivity()).initData(arg2);
 				JSONObject fJsonObject = jsonObject.getJSONObject("f");
 				JSONArray f1JsonArray=fJsonObject.getJSONArray("f1");
-				String pString="fa",tString="fc",wdString="fe",wsString="fg";			
+				String pString="fa",tString="fc",wdString="fe",wsString="fg";	
+				if(arg2==0&&Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>18){					
+					pString="fb";
+					tString="fd";
+					wdString="ff";
+					wsString="fh";
+				}
 				JSONObject day1=f1JsonArray.getJSONObject(arg2);
 				textViewPhenomenon.setText(WeatherPhenomenon.getInstance().getPhenomenon(day1.getString(pString)));
 				textViewTemperature.setText(day1.getString(tString)+WeatherUtil.DEGREE);
@@ -347,7 +267,7 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 				textViewSunset.setText(suns[1]+"日落");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
-				Toast.makeText(WeatherActivity.this, "解析天气出错", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "解析天气出错", Toast.LENGTH_SHORT).show();
 				LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
 			}	
 		}
@@ -359,26 +279,70 @@ public class WeatherActivity extends BaseActivity implements OnClickListener,OnI
 			if (location == null)
 		            return ;			
 			String district=location.getDistrict();
-			City city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(district.substring(0,district.length()-1));
+			City city=HaomeiDB.getInstance(getActivity()).getCityByName(district.substring(0,district.length()-1));
 			String areaId=city.getAreaId();
 			if (!TextUtils.isEmpty(areaId)) {
-				curCity.setAreaId(areaId);
+				curCity=city;
 			}
 			else {
 				String cityStr=location.getCity();
-				city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(cityStr.substring(0,cityStr.length()-1));
-				areaId=city.getAreaId();
-				if (!TextUtils.isEmpty(areaId)) {
-					curCity.setAreaId(areaId);
+				city=HaomeiDB.getInstance(getActivity()).getCityByName(cityStr.substring(0,cityStr.length()-1));
+				if (!TextUtils.isEmpty(city.getAreaId())) {
+					curCity=city;
 				}
 				else {
-					Toast.makeText(WeatherActivity.this, "无法找到目前位置编码", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "无法找到目前位置编码", Toast.LENGTH_SHORT).show();
 				}
 			}
 //			LogUtil.i(WeatherActivity.class.getSimpleName(), location.getLocType()+"  "+ BDLocation.TypeGpsLocation);
-			loadWeather(curCity.getAreaId());
+			((WeatherActivity)getActivity()).setTextViewLocation(curCity.getNameCn());
+			loadWeather();
 			mLocationClient.stop();
 			mLocationClient.unRegisterLocationListener(myListener);
 		}		
 	}
+	
+//	private void locateWeather(){
+//	String baiduUrl=String.format(BAIDU_MAP_URL, "39.983424,116.322987");
+//	HttpUtil.executeGet(baiduUrl, new HttpCallbackListener() {
+//		
+//		@Override
+//		public void onFinish(String response) {
+//			// TODO Auto-generated method stub
+//			try {						
+//				JSONObject jsonObject=new JSONObject(response);							
+//				JSONObject addrJsonObject=jsonObject.getJSONObject("result").getJSONObject("addressComponent");						
+//				String district=addrJsonObject.getString("district");
+//				City city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(district.substring(0,district.length()-1));
+//				String areaId=city.getAreaId();
+//				if (!TextUtils.isEmpty(areaId)) {
+//					curCity.setAreaId(areaId);
+//				}
+//				else {
+//					String cityStr=addrJsonObject.getString("city");
+//					city=HaomeiDB.getInstance(WeatherActivity.this).getCityByName(cityStr.substring(0,cityStr.length()-1));
+//					areaId=city.getAreaId();
+//					if (!TextUtils.isEmpty(areaId)) {
+//						curCity.setAreaId(areaId);
+//					}
+//					else {
+//						Toast.makeText(WeatherActivity.this, "无法找到目前位置编码", Toast.LENGTH_SHORT).show();
+//					}
+//				}
+//				loadWeather(curCity.getAreaId());
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block						
+//				Toast.makeText(WeatherActivity.this, "解析位置失败", Toast.LENGTH_SHORT).show();
+//				LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
+//			}			
+//		}
+//		
+//		@Override
+//		public void onError(Exception exception) {
+//			// TODO Auto-generated method stub
+//			Toast.makeText(WeatherActivity.this, "获取位置失败", Toast.LENGTH_SHORT).show();
+//			LogUtil.e(WeatherActivity.class.getSimpleName(), exception.getMessage());
+//		}
+//	});
+//}	
 }

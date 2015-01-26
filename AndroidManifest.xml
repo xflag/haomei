@@ -30,8 +30,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
     </uses-permission>
     <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />   
-    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- SD卡读取权限，用户写入离线定位数据 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" >
     </uses-permission>
     <!-- 允许应用读取低级别的系统日志文件 -->
@@ -46,8 +46,9 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="UosvSDYpTOIaaMpDZ42G4RYW" />
+
         <activity
-            android:name=".ui.WeatherActivity"
+            android:name="com.haomei.app.ui.activity.WeatherActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +65,7 @@
         <activity android:name=".ui.W2Activity" >
         </activity>
         <activity
-            android:name="com.haomei.app.ui.CityActivity"
+            android:name="com.haomei.app.ui.activity.CityActivity"
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>

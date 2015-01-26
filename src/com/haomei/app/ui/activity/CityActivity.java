@@ -1,4 +1,4 @@
-package com.haomei.app.ui;
+package com.haomei.app.ui.activity;
 
 import java.util.List;
 
@@ -147,10 +147,11 @@ public class CityActivity extends BaseActivity implements OnClickListener,OnItem
 		// TODO Auto-generated method stub
 		TextView textView=(TextView)arg1.findViewById(R.id.textViewCity);
 		City city=(City)textView.getTag();
+		String nameCnString=city.getNameCn();
+		if(nameCnString.contains(","))//当是搜索浮出的listview时，显示城市,省份格式(厦门,福建)，需要只提取出厦门传参
+			city.setNameCn(nameCnString.split(",")[0]);
 		Intent intent = new Intent();
-		Bundle bundle = new Bundle();
-		bundle.putString("area_id", city.getAreaId());
-		intent.putExtras(bundle);		
+		intent.putExtra("city", city);			
 		this.setResult(RESULT_OK, intent);
 		if(city.getId()!=0)
 			HaomeiDB.getInstance(this).updateCitySelTimes(city.getId());

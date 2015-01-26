@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" 
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textViewWindDirection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/hmBlue"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textViewWindScale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/textViewWindDirection"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/hmBlue"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textViewRelease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/hmBlue"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageViewSunraise"
+            android:scaleType="centerInside"  
+            android:layout_width="30dp"
+            android:layout_height="26dp"     
+            android:layout_marginBottom="1dp"            
+            android:layout_alignTop="@id/textViewSunraise"
+            android:layout_toLeftOf="@id/textViewSunraise"
+            android:visibility="gone"
+            android:src="@drawable/sunraise" />
+
+        <TextView
+            android:id="@+id/textViewSunraise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/textViewRelease"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/hmBlue"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageViewSunset"
+            android:scaleType="centerInside"  
+             android:layout_width="30dp"
+            android:layout_height="26dp"      
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="1dp"
+            android:layout_alignTop="@id/textViewSunset"
+            android:layout_toLeftOf="@id/textViewSunset"
+            android:visibility="gone"
+            android:src="@drawable/sunset" />
+
+        <TextView
+            android:id="@+id/textViewSunset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/textViewSunraise"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/hmBlue"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewPhenomenon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/hmBlue"
+                android:textSize="50sp" />
+
+            <TextView
+                android:id="@+id/textViewTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/hmBlue"
+                android:textSize="60sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
+
+        <GridView
+            android:id="@+id/gridViewForecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:numColumns="3" >
+        </GridView>
+    </RelativeLayout>

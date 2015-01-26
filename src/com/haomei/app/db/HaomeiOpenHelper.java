@@ -18,7 +18,7 @@ public class HaomeiOpenHelper extends SQLiteOpenHelper {
 	/**
 	 *  City表建表语句
 	 */
-	public static final String CREATE_CITY = "create table City ("
+	private static final String CREATE_CITY = "create table city ("
 				+ "id integer primary key autoincrement, " 
 				+ "area_id text, " 
 				+ "name_en text, " 
@@ -29,6 +29,12 @@ public class HaomeiOpenHelper extends SQLiteOpenHelper {
 				+ "prov_cn text, " 
 				+ "nation_en text, " 
 				+ "nation_cn text,sel_time time default (datetime('now', 'localtime')),sel_times integer default 0)";	
+	
+	/**
+	 * 选中城市表
+	 */
+	private static final String CREATE_SEL_CITY="create table sel_city(id integer primary key autoincrement,area_id text,name_cn text)";
+	
 	private static final String[] initSql=new String[]{
 
 "insert into City(area_id,name_en,name_cn,district_en,district_cn,prov_en,prov_cn,nation_en,nation_cn) values('101010100','beijing','北京','beijing','北京','beijing','北京','china','中国');",
@@ -2601,7 +2607,8 @@ public class HaomeiOpenHelper extends SQLiteOpenHelper {
 
 	};
 	
-
+	private static final String INIT_SEL_CITY="insert into sel_city(area_id,name_cn) values('locate','');";
+	
 	public HaomeiOpenHelper(Context context, String name,
 			CursorFactory factory, int version) {
 		super(context, name, factory, version);
@@ -2614,12 +2621,14 @@ public class HaomeiOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		db.execSQL(CREATE_CITY);  // 创建City表	
+		db.execSQL(CREATE_CITY);  // 创建city表	
+		db.execSQL(CREATE_SEL_CITY);//创建sel_city表
 		try {
 			db.beginTransaction();
 			for (int i = 0; i < initSql.length; ++i) {
 				db.execSQL(initSql[i]);
 			}
+			db.execSQL(INIT_SEL_CITY);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			LogUtil.e(HaomeiOpenHelper.class.getSimpleName(), e.getMessage());

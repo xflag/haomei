@@ -22,6 +22,8 @@ public class HaomeiDB {
 	 * 数据库名
 	 */
 	public static final String DB_NAME = "haomei";
+	
+	public static final String LOCATE="locate";
 
 	/**
 	 * 数据库版本
@@ -83,15 +85,16 @@ public class HaomeiDB {
 			values.put("prov_cn", city.getProvCn());
 			values.put("nation_en", city.getNationEn());
 			values.put("nation_cn", city.getNationCn());
-			db.insert("City", null, values);
+			db.insert("city", null, values);
 		}
 	}
 	
 	public City getCityByName(String nameCn){
 		City city=new City();
-		Cursor cursor=db.rawQuery("select id,area_id from City where name_cn=?", new String[]{nameCn});
+		Cursor cursor=db.rawQuery("select id,area_id,name_cn from city where name_cn=?", new String[]{nameCn});
 		if (cursor.moveToFirst()) {
 			city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));
+			city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));
 		}
 		return city;
 	}
@@ -103,7 +106,7 @@ public class HaomeiDB {
 	 */
 	public List<City> filterCities(String inputCityName) {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", new String[]{"id","area_id","name_cn","prov_cn","sel_times"}, "name_cn like ?",new String[]{"%"+inputCityName+"%"}, null, null, null);
+		Cursor cursor = db.query("city", new String[]{"id","area_id","name_cn","prov_cn","sel_times"}, "name_cn like ?",new String[]{"%"+inputCityName+"%"}, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -124,7 +127,7 @@ public class HaomeiDB {
 	 * @param id
 	 */
 	public void updateCitySelTimes(int id){
-		db.execSQL("update City set sel_time=datetime('now', 'localtime'),sel_times=sel_times+1 where id=?",new String[]{ String.valueOf(id)});
+		db.execSQL("update city set sel_time=datetime('now', 'localtime'),sel_times=sel_times+1 where id=?",new String[]{ String.valueOf(id)});
 	}
 	
 	/**
@@ -133,7 +136,7 @@ public class HaomeiDB {
 	 */
 	public List<City> loadFreqCities() {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor =db.rawQuery("select id,area_id,name_cn,sel_times from City where sel_times>0 order by sel_times desc,sel_time desc limit 0,6", null);
+		Cursor cursor =db.rawQuery("select id,area_id,name_cn,sel_times from city where sel_times>0 order by sel_times desc,sel_time desc limit 0,6", null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -157,10 +160,10 @@ public class HaomeiDB {
 	public List<City> loadHotCities() {
 		List<City> list = new ArrayList<City>();
 		City city = new City();		
-		city.setAreaId("locate");
+		city.setAreaId(HaomeiDB.LOCATE);
 		city.setNameCn("定位");
 		list.add(city);
-		Cursor cursor = db.query("City", null, "area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",HOT_CITIES, null, null, null);
+		Cursor cursor = db.query("city", null, "area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",HOT_CITIES, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				city = new City();
@@ -175,4 +178,47 @@ public class HaomeiDB {
 			cursor.close();
 		return list;
 	}	
+	
+	/**
+	 * 获取选中的城市
+	 * @return
+	 */
+	public List<City> loadSelCities() {
+		List<City> list = new ArrayList<City>();
+		Cursor cursor =db.rawQuery("select id,area_id,name_cn from sel_city order by id", null);
+		if (cursor.moveToFirst()) {
+			do {
+				City city = new City();
+				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));	
+				city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));	
+				list.add(city);
+			} while (cursor.moveToNext());
+		}
+		if(!cursor.isClosed())
+			cursor.close();
+		return list;
+	}	
+	
+	/**
+	 * 添加选中的城市
+	 * @param city
+	 */
+	public void addSelCity(City city) {
+		if (city != null) {
+			Cursor cursor=db.rawQuery("select id from sel_city where area_id=?", new String[]{city.getAreaId()});
+			if(cursor.moveToNext()){
+				int id=cursor.getInt(cursor.getColumnIndex("id"));
+				if(id==1)
+					db.execSQL("update sel_city set name_cn=? where id=1",new String[]{city.getNameCn()});
+				if(!cursor.isClosed())
+					cursor.close();
+				return;
+			}
+			ContentValues values = new ContentValues();
+			values.put("area_id", city.getAreaId());
+			values.put("name_cn", city.getNameCn());			
+			db.insert("sel_city", null, values);
+		}
+	}
 }

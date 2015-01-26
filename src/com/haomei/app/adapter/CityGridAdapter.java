@@ -42,7 +42,7 @@ public class CityGridAdapter extends ArrayAdapter<City> {
 			view=convertView;
 			viewHolder=(ViewHolder)view.getTag();
 		}		 
-		City city=this.getItem(position);
+		City city=this.getItem(position);		
 		viewHolder.cityTextView.setText(city.getNameCn());		
 		viewHolder.cityTextView.setTag(city);		
 		return view;
