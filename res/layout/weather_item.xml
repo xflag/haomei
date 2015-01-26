@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/r1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+   >
+
+    <TextView
+        android:id="@+id/textViewWindDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/hmBlue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textViewWindScale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/textViewWindDirection"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/hmBlue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textViewRelease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/hmBlue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textViewSunraise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textViewRelease"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/hmBlue"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewSunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textViewSunraise"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/hmBlue"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewPhenomenon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/hmBlue"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/textViewTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/hmBlue"
+            android:textSize="60sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1px" />
+
+    <GridView
+        android:id="@+id/gridViewForecast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:numColumns="3" >
+    </GridView>
+
+</RelativeLayout>
