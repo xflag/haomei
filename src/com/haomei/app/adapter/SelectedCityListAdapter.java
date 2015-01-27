@@ -18,13 +18,14 @@ import com.haomei.app.bean.City;
 import com.haomei.app.db.HaomeiDB;
 
 /**
+ * 选中城市listview的adapter
  * @author XuYongqi
  *
  */
-public class CityGridAdapter extends ArrayAdapter<City> {
+public class SelectedCityListAdapter extends ArrayAdapter<City> {
 	private int resourceId;
 	
-	public CityGridAdapter(Context context, int resource,
+	public SelectedCityListAdapter(Context context, int resource,
 			List<City> objects) {
 		super(context, resource, objects);
 		this.resourceId=resource;
@@ -40,7 +41,7 @@ public class CityGridAdapter extends ArrayAdapter<City> {
 			viewHolder=new ViewHolder();
 			viewHolder.imgLoc=(ImageView)view.findViewById(R.id.imageViewLoc);
 			viewHolder.cityTextView=(TextView)view.findViewById(com.haomei.app.R.id.textViewCity);
-			viewHolder.imageViewSelectedCity=(ImageView)view.findViewById(R.id.imageViewSelectedCity);
+			viewHolder.textViewTemperature=(TextView)view.findViewById(com.haomei.app.R.id.textViewTemperature);
 			view.setTag(viewHolder);
 		}
 		else {
@@ -48,17 +49,18 @@ public class CityGridAdapter extends ArrayAdapter<City> {
 			viewHolder=(ViewHolder)view.getTag();
 		}		 
 		City city=this.getItem(position);		
-		if(viewHolder.imgLoc!=null&&city.getAreaId().equals(HaomeiDB.LOCATE))
+		if(city.getAreaId().equals(HaomeiDB.LOCATE))
 			viewHolder.imgLoc.setVisibility(View.VISIBLE);
+		else
+			viewHolder.imgLoc.setVisibility(View.INVISIBLE);
 		viewHolder.cityTextView.setText(city.getNameCn());	
-		if(viewHolder.imageViewSelectedCity!=null&&city.isSelected())
-			viewHolder.imageViewSelectedCity.setVisibility(View.VISIBLE);
+		
 		viewHolder.cityTextView.setTag(city);		
 		return view;
 	}
 	
 	private class ViewHolder {
-		public ImageView imgLoc,imageViewSelectedCity;
-		public TextView cityTextView;
+		public ImageView imgLoc;
+		public TextView cityTextView,textViewTemperature;
     }
 }

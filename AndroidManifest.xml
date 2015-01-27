@@ -48,8 +48,8 @@
             android:value="UosvSDYpTOIaaMpDZ42G4RYW" />
 
         <activity
-            android:name="com.haomei.app.ui.activity.WeatherActivity"
-            android:label="@string/app_name" >
+            android:name=".ui.activity.WeatherActivity"
+            android:label="@string/app_name" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +65,7 @@
         <activity android:name=".ui.W2Activity" >
         </activity>
         <activity
-            android:name="com.haomei.app.ui.activity.CityActivity"
+            android:name=".ui.activity.CityActivity"
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
@@ -75,6 +75,11 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
+
+        <activity
+            android:name="com.haomei.app.ui.activity.SelectedCityActivity"
+            android:label="@string/title_activity_selected_city" >
+        </activity>
     </application>
 
 </manifest>

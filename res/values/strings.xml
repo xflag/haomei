@@ -2,5 +2,7 @@
 <resources>
 
     <string name="app_name">好美天气</string>
+    <string name="title_activity_selected_city">SelectedCityActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

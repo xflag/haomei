@@ -3,6 +3,8 @@
  */
 package com.haomei.app.db;
 
+import java.util.Locale;
+
 import com.haomei.app.util.LogUtil;
 
 import android.content.Context;
@@ -2607,7 +2609,7 @@ public class HaomeiOpenHelper extends SQLiteOpenHelper {
 
 	};
 	
-	private static final String INIT_SEL_CITY="insert into sel_city(area_id,name_cn) values('locate','');";
+	private static final String INIT_SEL_CITY=String.format(Locale.getDefault(),"insert into sel_city(area_id,name_cn) values('%s','%s');",HaomeiDB.LOCATE,HaomeiDB.LOCATE_NAME);
 	
 	public HaomeiOpenHelper(Context context, String name,
 			CursorFactory factory, int version) {

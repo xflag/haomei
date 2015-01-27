@@ -54,13 +54,19 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 	private JSONObject jsonObject;
 	private boolean isLocate;
 	
-//	private static final String BAIDU_MAP_URL="http://api.map.baidu.com/geocoder/v2/?ak=UosvSDYpTOIaaMpDZ42G4RYW&location=%s&output=json&mcode=5F:03:11:B5:EA:1D:A4:61:30:11:FD:7C:B1:4B:DE:26:DB:B3:23:25;com.haomei.app";
+	public boolean isLocate() {
+		return isLocate;
+	}
+
+	//	private static final String BAIDU_MAP_URL="http://api.map.baidu.com/geocoder/v2/?ak=UosvSDYpTOIaaMpDZ42G4RYW&location=%s&output=json&mcode=5F:03:11:B5:EA:1D:A4:61:30:11:FD:7C:B1:4B:DE:26:DB:B3:23:25;com.haomei.app";
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new HaomeiLocationListener();	
 	
 	public static WeatherFragment newInstance(City city) {  
 		WeatherFragment newFragment = new WeatherFragment();  
         newFragment.curCity=city;
+        if(city.getAreaId().equals(HaomeiDB.LOCATE))
+        	newFragment.isLocate=true;
         return newFragment;  
     }  
 	
@@ -279,6 +285,8 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 			if (location == null)
 		            return ;			
 			String district=location.getDistrict();
+			if(TextUtils.isEmpty(district))
+				return;
 			City city=HaomeiDB.getInstance(getActivity()).getCityByName(district.substring(0,district.length()-1));
 			String areaId=city.getAreaId();
 			if (!TextUtils.isEmpty(areaId)) {
@@ -296,6 +304,7 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 			}
 //			LogUtil.i(WeatherActivity.class.getSimpleName(), location.getLocType()+"  "+ BDLocation.TypeGpsLocation);
 			((WeatherActivity)getActivity()).setTextViewLocation(curCity.getNameCn());
+			HaomeiDB.getInstance(getActivity()).updateSelCityLocate(curCity.getNameCn());
 			loadWeather();
 			mLocationClient.stop();
 			mLocationClient.unRegisterLocationListener(myListener);

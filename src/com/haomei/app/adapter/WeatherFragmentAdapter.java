@@ -34,5 +34,9 @@ public class WeatherFragmentAdapter extends FragmentPagerAdapter {
 	public void addItem(Fragment fragment){
 		this.mFragments.add(fragment);
 	}
+	
+	public void removeItem(int idx){
+		this.mFragments.remove(idx);
+	}
 
 }

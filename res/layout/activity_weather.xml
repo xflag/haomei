@@ -36,7 +36,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/textViewLoc"
                     android:scaleType="centerInside"
-                    android:src="@drawable/title_location" />
+                    android:src="@drawable/title_location"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/textViewLoc"

@@ -25,7 +25,8 @@ public class HaomeiDB {
 	public static final String DB_NAME = "haomei";
 	
 	public static final String LOCATE="locate";
-
+	public static final String LOCATE_NAME="定位";
+	
 	/**
 	 * 数据库版本
 	 */
@@ -125,10 +126,10 @@ public class HaomeiDB {
 	
 	/**
 	 * 更新选中城市的sel_time,sel_times
-	 * @param id
+	 * @param areaId
 	 */
-	public void updateCitySelTimes(int id){
-		db.execSQL("update city set sel_time=datetime('now', 'localtime'),sel_times=sel_times+1 where id=?",new String[]{ String.valueOf(id)});
+	public void updateCitySelTimes(String areaId){
+		db.execSQL("update city set sel_time=datetime('now', 'localtime'),sel_times=sel_times+1 where area_id=?",new String[]{ areaId});
 	}
 	
 	/**
@@ -168,13 +169,18 @@ public class HaomeiDB {
 		List<City> list = new ArrayList<City>();
 		City city = new City();		
 		city.setAreaId(HaomeiDB.LOCATE);
-		city.setNameCn("定位");
+		city.setNameCn(HaomeiDB.LOCATE_NAME);
+		Cursor cursor=db.rawQuery("select area_id from sel_city where area_id=?", new String[]{city.getAreaId()});
+		if (cursor.moveToFirst()) {
+			city.setSelected(true);
+		}
+		if(!cursor.isClosed())
+			cursor.close();
 		list.add(city);
-		Cursor cursor=db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", HOT_CITIES);
-//		Cursor cursor = db.query("city", null, "area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",HOT_CITIES, null, null, null);
+		cursor=db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", HOT_CITIES);
 		if (cursor.moveToFirst()) {
 			do {
-				city = new City();
+			    city = new City();
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));
 				city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));
@@ -219,19 +225,30 @@ public class HaomeiDB {
 	 */
 	public void addSelCity(City city) {
 		if (city != null) {
-			Cursor cursor=db.rawQuery("select id from sel_city where area_id=?", new String[]{city.getAreaId()});
-			if(cursor.moveToNext()){
-				int id=cursor.getInt(cursor.getColumnIndex("id"));
-				if(id==1)
-					db.execSQL("update sel_city set name_cn=? where id=1",new String[]{city.getNameCn()});
-				if(!cursor.isClosed())
-					cursor.close();
-				return;
-			}
-			ContentValues values = new ContentValues();
-			values.put("area_id", city.getAreaId());
-			values.put("name_cn", city.getNameCn());			
-			db.insert("sel_city", null, values);
+//			if(city.getAreaId().equals(HaomeiDB.LOCATE))			
+//				db.execSQL("update sel_city set name_cn=? where area_id=?",new String[]{city.getNameCn(),city.getAreaId()});
+//			else {
+				ContentValues values = new ContentValues();
+				values.put("area_id", city.getAreaId());
+				values.put("name_cn", city.getNameCn());			
+				db.insert("sel_city", null, values);
+//			}			
 		}
+	}	
+	
+	/**
+	 * 更新locate记录的城市名称
+	 * @param nameCn
+	 */
+	public void updateSelCityLocate(String nameCn){
+		db.execSQL("update sel_city set name_cn=? where area_id=?",new String[]{nameCn,HaomeiDB.LOCATE});
+	}
+	
+	/**
+	 * 删除某个选中的城市
+	 * @param areaId
+	 */
+	public void deleteSelCity(String areaId){
+		db.execSQL("delete from sel_city where area_id=?",new String[]{areaId});
 	}
 }
