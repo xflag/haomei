@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.haomei.app.bean.City;
 
@@ -37,7 +38,7 @@ public class HaomeiDB {
 	/**
 	 * 热门城市列表
 	 */
-	public static final String[] HOT_CITIES={"101010100","101020100","101280101","101280601","101030100","101040100","101190101","101210101","101270101","101230101","101200101","101300101","101140101","101290101","101130101","101110101","101240101","101070101","101090101","101250101","101260101","101340101","101320101","101330101"};
+	public static final String[] HOT_CITIES={"101010100","101020100","101280101","101280601","101030100","101040100","101210101","101230101","101270101","101200101","101300101","101140101","101290101","101130101","101110101","101070101","101250101","101340101","101320101","101330101"};
 
 	/**
 	 * 将构造方法私有化
@@ -136,7 +137,8 @@ public class HaomeiDB {
 	 */
 	public List<City> loadFreqCities() {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor =db.rawQuery("select id,area_id,name_cn,sel_times from city where sel_times>0 order by sel_times desc,sel_time desc limit 0,6", null);
+		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times from city a where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
+//		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -144,6 +146,11 @@ public class HaomeiDB {
 				city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));
 				city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));
 				city.setSelTimes(cursor.getInt(cursor.getColumnIndex("sel_times")));
+//				String bAreaId=cursor.getString(cursor.getColumnIndex("b_area_id"));
+//				if(TextUtils.isEmpty(bAreaId))
+//					city.setSelected(false);
+//				else 
+//					city.setSelected(true);
 				list.add(city);
 			} while (cursor.moveToNext());
 		}
@@ -163,7 +170,8 @@ public class HaomeiDB {
 		city.setAreaId(HaomeiDB.LOCATE);
 		city.setNameCn("定位");
 		list.add(city);
-		Cursor cursor = db.query("city", null, "area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",HOT_CITIES, null, null, null);
+		Cursor cursor=db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", HOT_CITIES);
+//		Cursor cursor = db.query("city", null, "area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",HOT_CITIES, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				city = new City();
@@ -171,6 +179,11 @@ public class HaomeiDB {
 				city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));
 				city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));
 				city.setSelTimes(cursor.getInt(cursor.getColumnIndex("sel_times")));
+				String bAreaId=cursor.getString(cursor.getColumnIndex("b_area_id"));
+				if(TextUtils.isEmpty(bAreaId))
+					city.setSelected(false);
+				else 
+					city.setSelected(true);
 				list.add(city);
 			} while (cursor.moveToNext());
 		}

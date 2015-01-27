@@ -7,15 +7,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <ImageView
+            android:id="@+id/imageViewLoc"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/textViewCity"
+            android:scaleType="centerInside"
+            android:src="@drawable/addcity_location"
+            android:visibility="gone"
+             />
+
         <TextView
             android:id="@+id/textViewCity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:textColor="#767A8A"
             android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/imageViewSelectedCity"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/textViewCity"
+            android:scaleType="centerInside"
+            android:src="@drawable/selected_city"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
 </LinearLayout>

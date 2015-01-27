@@ -31,9 +31,9 @@
 
                 <ImageView
                     android:id="@+id/imageViewLoc"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignTop="@id/textViewLoc"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/textViewLoc"
                     android:scaleType="centerInside"
                     android:src="@drawable/title_location" />

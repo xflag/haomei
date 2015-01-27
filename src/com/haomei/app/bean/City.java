@@ -22,6 +22,7 @@ public class City implements Parcelable {
 	private String nationEn;
 	private String nationCn;
 	private int selTimes;
+	private boolean isSelected;	
 
 	public int getId() {
 		return id;
@@ -109,6 +110,14 @@ public class City implements Parcelable {
 
 	public void setSelTimes(int selTimes) {
 		this.selTimes = selTimes;
+	}
+	
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 
 	@Override
