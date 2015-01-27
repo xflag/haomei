@@ -30,6 +30,7 @@ import com.haomei.app.bean.City;
 import com.haomei.app.db.HaomeiDB;
 import com.haomei.app.ui.fragment.WeatherFragment;
 import com.haomei.app.util.ActivityRequestCode;
+import com.haomei.app.util.CacheUtil;
 import com.haomei.app.util.DateUtil;
 import com.haomei.app.util.LogUtil;
 
@@ -99,16 +100,17 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weather);
 
+		this.curIdx=CacheUtil.loadCache(this);
 		cityList = HaomeiDB.getInstance(this).loadSelCities();
 		this.findViews();
 		this.initLayoutSplash();
 		this.initViewPager();
 		this.refreshSplash();
 		// 注册接收刷新viewPager的广播接收器，用于接收其它activity发出的刷新广播
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(WeatherActivity.REFRESH_BROADCAST_ACTION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				this.mRefreshBroadcastReceiver, intentFilter);
+//		IntentFilter intentFilter = new IntentFilter();
+//		intentFilter.addAction(WeatherActivity.REFRESH_BROADCAST_ACTION);
+//		LocalBroadcastManager.getInstance(this).registerReceiver(
+//				this.mRefreshBroadcastReceiver, intentFilter);
 	}
 
 	@Override
@@ -154,6 +156,7 @@ public class WeatherActivity extends BaseFragmentActivity implements
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		CacheUtil.addCache(this, this.curIdx);
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				this.mRefreshBroadcastReceiver);
 		HaomeiDB.getInstance(this).close();
@@ -272,7 +275,7 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		this.weatherFragmentAdapter = new WeatherFragmentAdapter(
 				this.getSupportFragmentManager(), fragments);
 		this.vPager.setAdapter(this.weatherFragmentAdapter);
-		this.vPager.setCurrentItem(0);
+		this.vPager.setCurrentItem(this.curIdx);
 		this.vPager.setOnPageChangeListener(new MyOnPageChangeListener());
 		this.textViewLoc.setText(cityList.get(curIdx).getNameCn());
 	}

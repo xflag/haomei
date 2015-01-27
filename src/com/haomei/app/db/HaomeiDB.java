@@ -138,8 +138,8 @@ public class HaomeiDB {
 	 */
 	public List<City> loadFreqCities() {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times from city a where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
-//		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
+//		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times from city a where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
+		Cursor cursor =db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.sel_times>0 order by a.sel_times desc,a.sel_time desc limit 0,6", null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -147,11 +147,11 @@ public class HaomeiDB {
 				city.setAreaId(cursor.getString(cursor.getColumnIndex("area_id")));
 				city.setNameCn(cursor.getString(cursor.getColumnIndex("name_cn")));
 				city.setSelTimes(cursor.getInt(cursor.getColumnIndex("sel_times")));
-//				String bAreaId=cursor.getString(cursor.getColumnIndex("b_area_id"));
-//				if(TextUtils.isEmpty(bAreaId))
-//					city.setSelected(false);
-//				else 
-//					city.setSelected(true);
+				String bAreaId=cursor.getString(cursor.getColumnIndex("b_area_id"));
+				if(TextUtils.isEmpty(bAreaId))
+					city.setSelected(false);
+				else 
+					city.setSelected(true);
 				list.add(city);
 			} while (cursor.moveToNext());
 		}
