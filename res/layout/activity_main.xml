@@ -1,134 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fff"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#09B5F8" >
+    <!-- The PullToRefreshScrollView replaces a standard PullToRefreshScrollView widget. -->
 
-        <ImageView
-            android:id="@+id/imageViewHome"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/home" />
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="pullFromStart" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:orientation="vertical" >
-
-            @id/textViewLoc"
-
-            <TextView
-                android:id="@+id/textViewToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="#FCFEFD"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
-
-        <RelativeLayout            
-            android:id="@+id/r1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/textViewWindDirection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#90B3D1"
-                android:textSize="18sp" 
-                android:text="东风"/>
-
-            <TextView
-                android:id="@+id/textViewWindScale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/textViewWindDirection"
-                android:layout_marginLeft="10dp"
-                android:textColor="#90B3D1"
-                android:textSize="18sp" 
-                android:text="3级"/>
-
-            <TextView
-                android:id="@+id/textViewRelease"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#90B3D1"
-                android:textSize="18sp" 
-                android:text="1小时前发布"/>
-
-            <TextView
-                android:id="@+id/textViewSunraise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/textViewRelease"
-                android:layout_marginRight="10dp"
-                android:textColor="#90B3D1"
-                android:textSize="16sp" 
-                android:text="8:00日出"/>
-
-            <TextView
-                android:id="@+id/textViewSunset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/textViewSunraise"
-                android:layout_marginRight="10dp"
-                android:textColor="#90B3D1"
-                android:textSize="16sp" 
-                android:text="18:09日落"/>
-
-            <LinearLayout
-                android:id="@+id/linearLayout1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/textViewPhenomenon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#90B3D1"
-                    android:textSize="50sp" 
-                    android:text="多云"/>
-
-                <TextView
-                    android:id="@+id/textViewTemperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="#90B3D1"
-                    android:textSize="60sp" 
-                    android:text="8C"/>
-            </LinearLayout>
-
-           
-        </RelativeLayout>
-    </ScrollView>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="8dp"
+            android:text="filler_text"
+            android:textSize="16sp" />
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>

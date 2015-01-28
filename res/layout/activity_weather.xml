@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -29,6 +30,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" >
 
+                <TextView
+                    android:id="@+id/textViewLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="厦门"
+                    android:textColor="#fff"
+                    android:textSize="21sp" />
+
                 <ImageView
                     android:id="@+id/imageViewLoc"
                     android:layout_width="26dp"
@@ -38,15 +48,6 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/title_location"
                     android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/textViewLoc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="厦门"
-                    android:textColor="#fff"
-                    android:textSize="21sp" />
             </RelativeLayout>
 
             <TextView
@@ -58,13 +59,12 @@
                 android:textColor="#FCFEFD"
                 android:textSize="11sp" />
 
-            <LinearLayout android:id="@+id/layoutSplash"
+            <LinearLayout
+                android:id="@+id/layoutSplash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
-                >               
-                             
+                android:orientation="horizontal" >
             </LinearLayout>
         </LinearLayout>
 

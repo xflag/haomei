@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,9 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.haomei.app.R;
 import com.haomei.app.adapter.ForecastGridAdapter;
 import com.haomei.app.adapter.IndexListAdapter;
@@ -58,6 +63,8 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 	private City curCity;
 	private JSONObject jsonObject;
 	private boolean isLocate;
+	
+	private PullToRefreshScrollView mPullRefreshScrollView;
 	
 	public boolean isLocate() {
 		return isLocate;
@@ -106,15 +113,49 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 		this.forecastGridView=(GridView)view.findViewById(R.id.gridViewForecast);
 		this.forecastGridView.setOnItemClickListener(this);		
 		this.indexListView=(ListView)view.findViewById(R.id.listViewIndex);
+		this.mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
+		this.mPullRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+				new GetDataTask().execute();
+			}
+		});
 	}  
 	
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			// Simulates a background job.
+			refresh();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			// Do some stuff here
+
+			// Call onRefreshComplete when the list has been refreshed.
+			mPullRefreshScrollView.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
+	}
+	
 	public void refresh(){
-		if(this.isLocate){
-			this.locateBaidu();
+		try {
+			if(this.isLocate){
+				this.locateBaidu();
+			}
+			else {
+				this.loadWeather();
+			}
+		} catch (Exception e) {
+			Toast.makeText(getActivity(), "刷新天气失败", Toast.LENGTH_SHORT).show();
+			LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
 		}
-		else {
-			this.loadWeather();
-		}
+		
 	}
 	
 	private void locateBaidu(){
@@ -122,24 +163,25 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 			
 			@Override
 			public void run() {
-				textViewRelease.setText("定位中...");				
+				textViewRelease.setText("定位中...");	
+				mLocationClient = new LocationClient(getActivity().getApplicationContext());     //声明LocationClient类
+			    mLocationClient.registerLocationListener( myListener );    //注册监听函数
+				LocationClientOption option = new LocationClientOption();
+				option.setLocationMode(LocationMode.Hight_Accuracy);//设置定位模式
+				option.setProdName("com.haomei.app");
+				option.setCoorType("bd09ll");//返回的定位结果是百度经纬度,默认值gcj02
+				option.setScanSpan(3000);//设置发起定位请求的间隔时间为3000ms
+				option.setIsNeedAddress(true);//返回的定位结果包含地址信息
+				option.setNeedDeviceDirect(true);//返回的定位结果包含手机机头的方向
+				mLocationClient.setLocOption(option);
+				mLocationClient.start();
+				if (mLocationClient != null && mLocationClient.isStarted())
+					mLocationClient.requestLocation();
+				else 
+					LogUtil.d(WeatherActivity.class.getSimpleName(), "baiduLocClient is null or not started");
 			}
 		});
-		this.mLocationClient = new LocationClient(getActivity().getApplicationContext());     //声明LocationClient类
-	    this.mLocationClient.registerLocationListener( myListener );    //注册监听函数
-		LocationClientOption option = new LocationClientOption();
-		option.setLocationMode(LocationMode.Hight_Accuracy);//设置定位模式
-		option.setProdName("com.haomei.app");
-		option.setCoorType("bd09ll");//返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(3000);//设置发起定位请求的间隔时间为3000ms
-		option.setIsNeedAddress(true);//返回的定位结果包含地址信息
-		option.setNeedDeviceDirect(true);//返回的定位结果包含手机机头的方向
-		this.mLocationClient.setLocOption(option);
-		this.mLocationClient.start();
-		if (mLocationClient != null && mLocationClient.isStarted())
-			mLocationClient.requestLocation();
-		else 
-			LogUtil.d(WeatherActivity.class.getSimpleName(), "baiduLocClient is null or not started");
+		
 	}		
 	
 	public void loadWeather(){
