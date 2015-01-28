@@ -51,7 +51,7 @@ public class WeatherActivity extends BaseFragmentActivity implements
 
 	private long exitTime;
 
-	public static final String REFRESH_BROADCAST_ACTION = "action.refreshViewPager";
+	/*public static final String REFRESH_BROADCAST_ACTION = "action.refreshViewPager";
 	private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -87,7 +87,7 @@ public class WeatherActivity extends BaseFragmentActivity implements
 				}
 			}
 		}
-	};
+	};*/
 
 	public static void startActivity(Activity activity, City city) {
 		Intent intent = new Intent(activity, WeatherActivity.class);
@@ -157,8 +157,8 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		CacheUtil.addCache(this, this.curIdx);
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				this.mRefreshBroadcastReceiver);
+//		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+//				this.mRefreshBroadcastReceiver);
 		HaomeiDB.getInstance(this).close();
 	}
 
@@ -322,6 +322,8 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		for (int i = 0; i < cityList.size(); ++i) {
 			if (cityList.get(i).getAreaId().equals(HaomeiDB.LOCATE)) {
 				cityList.get(i).setNameCn(str);
+				if(this.curIdx!=i)
+					return;
 				break;
 			}
 		}		

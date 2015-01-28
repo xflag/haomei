@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +29,17 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.haomei.app.R;
 import com.haomei.app.adapter.ForecastGridAdapter;
+import com.haomei.app.adapter.IndexListAdapter;
 import com.haomei.app.bean.City;
 import com.haomei.app.bean.ForecastItem;
+import com.haomei.app.bean.IndexItem;
 import com.haomei.app.db.HaomeiDB;
 import com.haomei.app.ui.activity.WeatherActivity;
 import com.haomei.app.util.DateUtil;
 import com.haomei.app.util.HttpCallbackListener;
 import com.haomei.app.util.HttpUtil;
 import com.haomei.app.util.LogUtil;
+import com.haomei.app.util.UIUtil;
 import com.haomei.app.util.WeatherPhenomenon;
 import com.haomei.app.util.WeatherUtil;
 import com.haomei.app.util.WindDirection;
@@ -49,6 +53,7 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 	private ImageView imgSunraise,imgSunset;
 	private TextView textViewRelease,textViewSunraise,textViewSunset,textViewPhenomenon,textViewTemperature,textViewWindDirection,textViewWindScale;
 	private GridView forecastGridView;	
+	private ListView indexListView;
 	
 	private City curCity;
 	private JSONObject jsonObject;
@@ -100,7 +105,8 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 		this.textViewWindScale=(TextView)view.findViewById(R.id.textViewWindScale);
 		this.forecastGridView=(GridView)view.findViewById(R.id.gridViewForecast);
 		this.forecastGridView.setOnItemClickListener(this);		
-	}
+		this.indexListView=(ListView)view.findViewById(R.id.listViewIndex);
+	}  
 	
 	public void refresh(){
 		if(this.isLocate){
@@ -112,6 +118,13 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 	}
 	
 	private void locateBaidu(){
+		getActivity().runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				textViewRelease.setText("定位中...");				
+			}
+		});
 		this.mLocationClient = new LocationClient(getActivity().getApplicationContext());     //声明LocationClient类
 	    this.mLocationClient.registerLocationListener( myListener );    //注册监听函数
 		LocationClientOption option = new LocationClientOption();
@@ -199,6 +212,37 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 				LogUtil.e(WeatherActivity.class.getSimpleName(), exception.getMessage());
 			}
 		});
+		
+		HttpUtil.executeGet(WeatherUtil.getUrl(curCity.getAreaId(),WeatherUtil.INDEX_V), new HttpCallbackListener() {
+			
+			@Override
+			public void onFinish(final String response) {
+				// TODO Auto-generated method stub
+				getActivity().runOnUiThread(new Runnable() {					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							JSONObject indexJsonObject=new JSONObject(response);							
+							JSONArray iJsonArray=indexJsonObject.getJSONArray("i");							
+							loadIndexList(iJsonArray);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block							
+							Toast.makeText(getActivity(), "获取天气指数失败", Toast.LENGTH_SHORT).show();
+							LogUtil.e(WeatherActivity.class.getSimpleName(), e.getMessage());
+						}						
+					}
+				});
+			}
+			
+			@Override
+			public void onError(Exception exception) {
+				// TODO Auto-generated method stub
+//				textViewRelease.setText("获取天气指数失败");
+				Toast.makeText(getActivity(), "获取天气指数失败", Toast.LENGTH_SHORT).show();
+				LogUtil.e(WeatherActivity.class.getSimpleName(), exception.getMessage());
+			}
+		});
 	}
 	
 	private void loadForecastGrid(JSONArray f1JsonArray) throws JSONException{
@@ -245,6 +289,20 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 		}
 		ForecastGridAdapter forecastGridAdapter=new ForecastGridAdapter(getActivity(), R.layout.forecast_item, list);
 		forecastGridView.setAdapter(forecastGridAdapter);
+	}
+	
+	private void loadIndexList(JSONArray iJsonArray) throws JSONException{
+		List<IndexItem> list=new ArrayList<IndexItem>();
+		for (int i = 0; i < iJsonArray.length(); ++i) {
+			IndexItem item=new IndexItem();
+			item.setTypeStr(iJsonArray.getJSONObject(i).getString("i2"));
+			item.setIndexStr(iJsonArray.getJSONObject(i).getString("i4"));
+			item.setDescStr(iJsonArray.getJSONObject(i).getString("i5"));
+			list.add(item);
+		}
+		IndexListAdapter listAdapter=new IndexListAdapter(getActivity(), R.layout.index_list_item, list);
+		this.indexListView.setAdapter(listAdapter);
+		UIUtil.fixListViewHeight(this.indexListView);
 	}
 	
 	@Override
