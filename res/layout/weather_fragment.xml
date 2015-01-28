@@ -31,7 +31,6 @@
                     android:id="@+id/textViewWindDirection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="东风"
                     android:textColor="@color/hmBlue"
                     android:textSize="18sp" />
 
@@ -41,7 +40,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="3小时前发布"
                     android:textColor="@color/hmBlue"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -57,7 +55,6 @@
                     android:id="@+id/textViewWindScale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="三到四级"
                     android:textColor="@color/hmBlue"
                     android:textSize="18sp" />
 
@@ -87,7 +84,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textViewRelease"
-                            android:text="07:09日出"
                             android:textColor="@color/hmBlue"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -111,7 +107,6 @@
                             android:id="@+id/textViewSunset"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="17:59日落"
                             android:textColor="@color/hmBlue"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -131,7 +126,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="多云"
                     android:textColor="@color/hmBlue"
                     android:textSize="50sp" />
 
@@ -140,7 +134,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="15"
                     android:textColor="@color/hmBlue"
                     android:textSize="60sp" />
             </LinearLayout>
