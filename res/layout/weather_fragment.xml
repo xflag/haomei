@@ -149,7 +149,7 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
-                android:background="#F7F7F7" />
+                android:background="@color/hmGray" />
 
             <GridView
                 android:id="@+id/gridViewForecast"
@@ -162,7 +162,7 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
-                android:background="#F7F7F7" />
+                android:background="@color/hmGray" />
 
             <TextView
                 android:id="@+id/textView1"

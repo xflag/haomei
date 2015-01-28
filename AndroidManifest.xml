@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.haomei.app"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -72,8 +72,12 @@
         </service>
 
         <activity
-            android:name="com.haomei.app.ui.activity.SelectedCityActivity"
+            android:name=".ui.activity.SelectedCityActivity"
             android:label="@string/title_activity_selected_city" >
+        </activity>
+        <activity
+            android:name="com.haomei.app.ui.activity.AboutActivity"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

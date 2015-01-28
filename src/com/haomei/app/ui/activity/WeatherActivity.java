@@ -38,7 +38,7 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		OnClickListener {
 	private TextView textViewLoc, textViewToday;
 	private LinearLayout layoutSplash;
-	private ImageView imgLoc, imgHome, imgRefresh;
+	private ImageView imgLoc, imgHome, imgAbout;
 	private ViewPager vPager;
 
 	private int curIdx;
@@ -242,8 +242,8 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		this.layoutSplash = (LinearLayout) this.findViewById(R.id.layoutSplash);
 		this.imgHome = (ImageView) this.findViewById(R.id.imageViewHome);
 		this.imgHome.setOnClickListener(this);
-		this.imgRefresh = (ImageView) this.findViewById(R.id.imageViewRefresh);
-		this.imgRefresh.setOnClickListener(this);
+		this.imgAbout = (ImageView) this.findViewById(R.id.imageViewAbout);
+		this.imgAbout.setOnClickListener(this);
 	}
 
 	private void initLayoutSplash() {
@@ -343,15 +343,15 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		case R.id.imageViewHome:
 			SelectedCityActivity.startActivity(this);
 			break;
-		case R.id.imageViewRefresh:
-			try {
-				((WeatherFragment) this.weatherFragmentAdapter.getItem(this.curIdx))
-				.refresh();
-			} catch (Exception e) {
-				LogUtil.e(WeatherActivity.class.getSimpleName(),e.getMessage());
-				Toast.makeText(this, "刷新出错", Toast.LENGTH_SHORT).show();				
-			}
-			
+		case R.id.imageViewAbout:
+//			try {
+//				((WeatherFragment) this.weatherFragmentAdapter.getItem(this.curIdx))
+//				.refresh();
+//			} catch (Exception e) {
+//				LogUtil.e(WeatherActivity.class.getSimpleName(),e.getMessage());
+//				Toast.makeText(this, "刷新出错", Toast.LENGTH_SHORT).show();				
+//			}
+			AboutActivity.startActivity(this);
 			break;
 
 		default:
