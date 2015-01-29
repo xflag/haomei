@@ -39,7 +39,7 @@ public class HaomeiDB {
 	/**
 	 * 热门城市列表
 	 */
-	public static final String[] HOT_CITIES={"101010100","101020100","101280101","101280601","101030100","101040100","101210101","101230101","101270101","101200101","101300101","101140101","101290101","101130101","101110101","101070101","101250101","101340101","101320101","101330101"};
+	public static final String[] HOT_CITIES={"101010100","101020100","101280101","101280601","101030100","101040100","101210101","101230101","101270101","101200101","101140101","101130101","101110101","101250101","101340101","101320101","101330101"};
 
 	/**
 	 * 将构造方法私有化
@@ -177,7 +177,7 @@ public class HaomeiDB {
 		if(!cursor.isClosed())
 			cursor.close();
 		list.add(city);
-		cursor=db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", HOT_CITIES);
+		cursor=db.rawQuery("select a.id,a.area_id,a.name_cn,a.sel_times,b.area_id b_area_id from city a left join sel_city b on a.area_id=b.area_id where a.area_id in (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", HOT_CITIES);
 		if (cursor.moveToFirst()) {
 			do {
 			    city = new City();
