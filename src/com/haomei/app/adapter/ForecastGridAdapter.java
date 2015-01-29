@@ -44,6 +44,7 @@ public class ForecastGridAdapter extends ArrayAdapter<ForecastItem> {
 			viewHolder.imageViewPhenomenon=(ImageView)view.findViewById(R.id.imageViewPhenomenon);
 			viewHolder.tvTemeprature=(TextView)view.findViewById(com.haomei.app.R.id.tvTemperature);
 			viewHolder.tvWeatherPhenomenon=(TextView)view.findViewById(com.haomei.app.R.id.tvWeatherPhenomenon);
+//			viewHolder.viewLine1=(View)view.findViewById(R.id.viewLine1);
 			view.setTag(viewHolder);
 		}
 		else {
@@ -56,6 +57,9 @@ public class ForecastGridAdapter extends ArrayAdapter<ForecastItem> {
 		viewHolder.imageViewPhenomenon.setImageResource(imgId);
 		viewHolder.tvWeatherPhenomenon.setText(item.getWeatherPhenomenon());
 		viewHolder.tvTemeprature.setText(item.getTemeprature());
+//		if (position==2) {
+//			viewHolder.viewLine1.setVisibility(View.GONE);
+//		}
 		return view;
 	}	
 	
@@ -68,6 +72,7 @@ public class ForecastGridAdapter extends ArrayAdapter<ForecastItem> {
 	private class ViewHolder {
 		public TextView tvDay,tvTemeprature,tvWeatherPhenomenon;
 		public ImageView imageViewPhenomenon;
+//		public View viewLine1;
     }
 
 }

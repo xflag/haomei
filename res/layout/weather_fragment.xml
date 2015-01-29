@@ -148,6 +148,8 @@
                 android:id="@+id/gridViewForecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:verticalSpacing="0dp"
+                android:listSelector="@android:color/transparent"
                 android:numColumns="3" >
             </GridView>
 

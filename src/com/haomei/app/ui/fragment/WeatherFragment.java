@@ -367,18 +367,27 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 			String fb = object.getString("fb");
 			int faInt;
 			String faString;
-			if (fa.equals(fb)) {
-				faInt = Integer.parseInt(fa);
-				faString = WeatherPhenomenon.getInstance().getPhenomenon(fa);
-			} else if (TextUtils.isEmpty(fa)) { // 晚上时，不显示白天天气
+//			if (fa.equals(fb)) {
+//				faInt = Integer.parseInt(fa);
+//				faString = WeatherPhenomenon.getInstance().getPhenomenon(fa);
+//			} else if (TextUtils.isEmpty(fa)) { // 晚上时，不显示白天天气
+//				faInt = Integer.parseInt(fb) + 36;
+//				faString = WeatherPhenomenon.getInstance().getPhenomenon(fb);
+//			}
+//			else {
+//				faInt = Integer.parseInt(fa);
+//				faString = WeatherPhenomenon.getInstance().getPhenomenon(fa)
+//						+ "转"
+//						+ WeatherPhenomenon.getInstance().getPhenomenon(fb);
+//			}
+			if (TextUtils.isEmpty(fa)) { // 晚上时，不显示白天天气
 				faInt = Integer.parseInt(fb) + 36;
 				faString = WeatherPhenomenon.getInstance().getPhenomenon(fb);
-			} else {
-				faInt = Integer.parseInt(fa);
-				faString = WeatherPhenomenon.getInstance().getPhenomenon(fa)
-						+ "转"
-						+ WeatherPhenomenon.getInstance().getPhenomenon(fb);
 			}
+			else {
+				faInt = Integer.parseInt(fa);
+				faString = WeatherPhenomenon.getInstance().getPhenomenon(fa);
+			} 			
 			if (faInt == 53 || faInt == (53 + 36))
 				faInt -= 19;// 53-34=19,霾
 			else if (faInt == 99 || faInt == (99 + 36))
@@ -397,6 +406,7 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 		ForecastGridAdapter forecastGridAdapter = new ForecastGridAdapter(
 				getActivity(), R.layout.forecast_item, list);
 		forecastGridView.setAdapter(forecastGridAdapter);
+//		UIUtil.fixGridViewHeight(forecastGridView);
 	}
 
 	private void loadIndexList(JSONArray iJsonArray) throws JSONException {
