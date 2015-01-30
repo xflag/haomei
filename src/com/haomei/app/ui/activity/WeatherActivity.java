@@ -28,7 +28,7 @@ import com.haomei.app.ui.fragment.WeatherFragment;
 import com.haomei.app.util.ActivityRequestCode;
 import com.haomei.app.util.CacheUtil;
 import com.haomei.app.util.DateUtil;
-import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.update.UmengUpdateAgent;
 
 public class WeatherActivity extends BaseFragmentActivity implements
 		OnClickListener {
@@ -97,7 +97,9 @@ public class WeatherActivity extends BaseFragmentActivity implements
 		setContentView(R.layout.activity_weather);
 		
 //		AnalyticsConfig.enableEncrypt(true);//umeng统计数据传输加密
-
+		//友盟自动更新
+		UmengUpdateAgent.update(this);
+		
 		this.curIdx=CacheUtil.loadCache(this);
 		cityList = HaomeiDB.getInstance(this).loadSelCities();
 		this.findViews();
