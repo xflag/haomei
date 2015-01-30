@@ -46,6 +46,13 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="UosvSDYpTOIaaMpDZ42G4RYW" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="54cb0c83fd98c5c5ab0002b3" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="frankXu" />
 
         <activity
             android:name=".ui.activity.WeatherActivity"

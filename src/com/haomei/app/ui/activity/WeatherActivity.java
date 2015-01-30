@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
@@ -32,7 +28,7 @@ import com.haomei.app.ui.fragment.WeatherFragment;
 import com.haomei.app.util.ActivityRequestCode;
 import com.haomei.app.util.CacheUtil;
 import com.haomei.app.util.DateUtil;
-import com.haomei.app.util.LogUtil;
+import com.umeng.analytics.AnalyticsConfig;
 
 public class WeatherActivity extends BaseFragmentActivity implements
 		OnClickListener {
@@ -99,6 +95,8 @@ public class WeatherActivity extends BaseFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weather);
+		
+//		AnalyticsConfig.enableEncrypt(true);//umeng统计数据传输加密
 
 		this.curIdx=CacheUtil.loadCache(this);
 		cityList = HaomeiDB.getInstance(this).loadSelCities();

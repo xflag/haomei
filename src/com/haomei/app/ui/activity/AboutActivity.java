@@ -9,9 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haomei.app.R;
+import com.haomei.app.base.BaseActivity;
 import com.haomei.app.util.LogUtil;
 
-public class AboutActivity extends Activity implements OnClickListener {
+public class AboutActivity extends BaseActivity implements OnClickListener {
 	private ImageView imgBack;
 	private TextView textViewVersion;
 

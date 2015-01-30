@@ -25,6 +25,7 @@ import com.haomei.app.adapter.CityGridAdapter;
 import com.haomei.app.base.BaseActivity;
 import com.haomei.app.bean.City;
 import com.haomei.app.db.HaomeiDB;
+import com.haomei.app.util.UmengEvent;
 
 public class CityActivity extends BaseActivity implements OnClickListener,
 		OnItemClickListener {
@@ -156,6 +157,22 @@ public class CityActivity extends BaseActivity implements OnClickListener,
 		String nameCnString = city.getNameCn();
 		if (nameCnString.contains(","))// 当是搜索浮出的listview时，显示城市,省份格式(厦门,福建)，需要只提取出厦门传参
 			city.setNameCn(nameCnString.split(",")[0]);
+
+		//友盟自定义事件
+		switch (arg0.getId()) {
+		case R.id.listViewResult:
+			UmengEvent.invokeByCity(this, UmengEvent.SEARCH_BY_CITY, city);
+			break;
+		case R.id.gridViewFreqCity:
+			UmengEvent.invokeByCity(this, UmengEvent.VIEW_FREQ_CITY, city);
+			break;
+		case R.id.gridViewHotCity:
+			UmengEvent.invokeByCity(this, UmengEvent.VIEW_HOT_CITY, city);
+			break;
+		default:
+			break;
+		}		
+		
 		// Intent intent = new Intent();
 		// intent.putExtra("city", city);
 		// this.setResult(RESULT_OK, intent);

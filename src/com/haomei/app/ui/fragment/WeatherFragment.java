@@ -45,6 +45,7 @@ import com.haomei.app.util.HttpCallbackListener;
 import com.haomei.app.util.HttpUtil;
 import com.haomei.app.util.LogUtil;
 import com.haomei.app.util.UIUtil;
+import com.haomei.app.util.UmengEvent;
 import com.haomei.app.util.WeatherPhenomenon;
 import com.haomei.app.util.WeatherUtil;
 import com.haomei.app.util.WindDirection;
@@ -138,6 +139,8 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 					@Override
 					public void onRefresh(
 							PullToRefreshBase<ScrollView> refreshView) {
+						//友盟统计，刷新天气
+						UmengEvent.invokeByCity(getActivity(), UmengEvent.REFRESH, curCity);
 						new GetDataTask().execute();
 					}
 				});
@@ -351,17 +354,22 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 					}
 				});
 	}
+	
+	private String getDayByNumber(int i){
+		if (i == 0)
+			return "今天";
+		else if (i == 1)
+			return "明天";
+		else if (i == 2)
+			return "后天";
+		return "";
+	}
 
 	private void loadForecastGrid(JSONArray f1JsonArray) throws JSONException {
 		List<ForecastItem> list = new ArrayList<ForecastItem>();
 		for (int i = 0; i < f1JsonArray.length(); ++i) {
 			ForecastItem item = new ForecastItem();
-			if (i == 0)
-				item.setDay("今天");
-			else if (i == 1)
-				item.setDay("明天");
-			else if (i == 2)
-				item.setDay("后天");
+			item.setDay(this.getDayByNumber(i));
 			JSONObject object = f1JsonArray.getJSONObject(i);
 			String fa = object.getString("fa");
 			String fb = object.getString("fb");
@@ -429,6 +437,9 @@ public class WeatherFragment extends Fragment implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		if (arg0.getId() == R.id.gridViewForecast) {
 			try {
+				//友盟统计自定义事件，点击日期查看天气
+				UmengEvent.invokeByDay(getActivity(), UmengEvent.CLICK_DAY, this.getDayByNumber(arg2));
+				
 				((WeatherActivity) this.getActivity()).initData(arg2);
 				JSONObject fJsonObject = jsonObject.getJSONObject("f");
 				JSONArray f1JsonArray = fJsonObject.getJSONArray("f1");

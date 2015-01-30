@@ -22,6 +22,7 @@ import com.haomei.app.base.BaseActivity;
 import com.haomei.app.bean.City;
 import com.haomei.app.db.HaomeiDB;
 import com.haomei.app.util.ActivityRequestCode;
+import com.haomei.app.util.UmengEvent;
 
 /**
  * 
@@ -98,6 +99,10 @@ public class SelectedCityActivity extends BaseActivity implements
 		// Intent intent = new Intent();
 		// intent.putExtra("city", city);
 		// this.setResult(RESULT_OK, intent);
+
+		// 友盟统计自定义事件，通过已选城市查看天气
+		UmengEvent.invokeByCity(this, UmengEvent.VIEW_SEL_CITY, city);
+
 		if (city.getId() != 0)
 			HaomeiDB.getInstance(this).updateCitySelTimes(city.getAreaId());
 		// this.finish();
