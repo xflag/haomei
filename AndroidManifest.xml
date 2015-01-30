@@ -63,7 +63,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>       
+        </activity>
         <activity
             android:name="com.frank.haomei.ui.activity.CityActivity"
             android:configChanges="orientation|keyboardHidden"
