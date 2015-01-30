@@ -30,7 +30,7 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <com.haomei.app.ui.wiget.HmTextView
+    <com.frank.haomei.ui.wiget.HmTextView
         android:id="@+id/textViewDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

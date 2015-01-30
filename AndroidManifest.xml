@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.haomei.app"
+    package="com.frank.haomei"
     android:versionCode="1"
     android:versionName="1.0.0" >
 
@@ -52,10 +52,10 @@
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="frankXu" />
+            android:value="frankHaomei" />
 
         <activity
-            android:name=".ui.activity.WeatherActivity"
+            android:name="com.frank.haomei.ui.activity.WeatherActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" >
             <intent-filter>
@@ -63,11 +63,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity" >
-        </activity>
+        </activity>       
         <activity
-            android:name=".ui.activity.CityActivity"
+            android:name="com.frank.haomei.ui.activity.CityActivity"
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
@@ -79,11 +77,11 @@
         </service>
 
         <activity
-            android:name=".ui.activity.SelectedCityActivity"
+            android:name="com.frank.haomei.ui.activity.SelectedCityActivity"
             android:label="@string/title_activity_selected_city" >
         </activity>
         <activity
-            android:name="com.haomei.app.ui.activity.AboutActivity"
+            android:name="com.frank.haomei.ui.activity.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
 
